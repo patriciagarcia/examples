@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--Example of file upload with drag and drop from desktop,-->
+<!--taken from http://www.html5rocks.com/en/tutorials/file/dndfiles/#toc-selecting-files-dnd-->
+<!--See also:-->
+<!--http://www.html5rocks.com/en/tutorials/dnd/basics/-->
+<!--http://html5doctor.com/native-drag-and-drop/-->
+<!--http://html5demos.com/dnd-upload-->
+<html>
+   <head>
+      <!--<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>-->
+   </head>
+   <body>
+      <div id="drop_zone" style="height:200px; width: 200px; border:1px solid;">Drop files here</div>
+      <output id="list"></output>
+
+      <script>
+         function handleFileSelect(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+
+            // Jquery version, dataTransfer is "hidden" inside originalEvent
+            // var files = evt.originalEvent.dataTransfer.files; // FileList object.
+            var files = evt.dataTransfer.files; // FileList object.
+
+            // files is a FileList of File objects. List some properties.
+            var output = [];
+            for (var i = 0, f; f = files[i]; i++) {
+               output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                  f.size, ' bytes, last modified: ',
+                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a','</li>');
+            }
+            document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+         }
+
+         function handleDragOver(evt) {
+           evt.stopPropagation();
+           evt.preventDefault();
+           // Jquery version, dataTransfer is "hidden" inside originalEvent
+           // evt.originalEvent.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+           evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+         }
+
+         // Setup the dnd listeners.
+         // Jquery version (using the equivalent of "life", element can be loaded at a later point)
+         // $(document).on('dragover', '#drop_zone', handleDragOver);
+         // $(document).on('drop', '#drop_zone', handleFileSelect);
+         var dropZone = document.getElementById('drop_zone');
+         dropZone.addEventListener('dragover', handleDragOver);
+         dropZone.addEventListener('drop', handleFileSelect, false);
+      </script>
+   </body>
+</html>
